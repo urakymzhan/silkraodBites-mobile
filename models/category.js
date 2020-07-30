@@ -5,4 +5,5 @@ class Category {
     this.color = color;
   }
 }
+
 export default Category;

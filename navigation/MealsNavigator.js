@@ -1,54 +1,59 @@
-import React from "react";
-import { Text, Platform } from "react-native";
-import { createAppContainer } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
-import { createBottomTabNavigator } from "react-navigation-tabs";
-import { createDrawerNavigator } from "react-navigation-drawer";
-import CategoriesScreen from "../screens/CategoriesScreen";
-import CategoryMealsScreen from "../screens/CategoryMealsScreen";
-import MealDetailScreen from "../screens/MealDetailScreen";
-import FavoritesScreen from "../screens/FavoritesScreen";
-import Colors from "../constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
-import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
-// import {} from "react-native-paper";
-import FiltersScreen from "../screens/FiltersScreen";
+import React from 'react';
+import { Platform, Text } from 'react-native';
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+  createAppContainer,
+  createDrawerNavigator
+} from 'react-navigation';
+import { Ionicons } from '@expo/vector-icons';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+
+import CategoriesScreen from '../screens/CategoriesScreen';
+import CategoryMealsScreen from '../screens/CategoryMealsScreen';
+import MealDetailScreen from '../screens/MealDetailScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
+import FiltersScreen from '../screens/FiltersScreen';
+import Colors from '../constants/Colors';
 
 const defaultStackNavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "",
+    backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : ''
   },
-  headerTintColor: Platform.OS === "android" ? "#fff" : Colors.primaryColor,
   headerTitleStyle: {
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold'
   },
-  headerTitle: "A Screen",
   headerBackTitleStyle: {
-    fontFamily: "open-sans",
+    fontFamily: 'open-sans'
   },
+  headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor,
+  headerTitle: 'A Screen'
 };
 
 const MealsNavigator = createStackNavigator(
   {
-    Categories: CategoriesScreen,
-    CategoryMeals: {
-      // just to show we can pass options here
-      screen: CategoryMealsScreen,
+    Categories: {
+      screen: CategoriesScreen
     },
-    MealDetail: MealDetailScreen,
+    CategoryMeals: {
+      screen: CategoryMealsScreen
+    },
+    MealDetail: MealDetailScreen
   },
   {
-    defaultNavigationOptions: defaultStackNavOptions,
+    // initialRouteName: 'Categories',
+    defaultNavigationOptions: defaultStackNavOptions
   }
 );
 
 const FavNavigator = createStackNavigator(
   {
     Favorites: FavoritesScreen,
-    MealDetail: MealDetailScreen,
+    MealDetail: MealDetailScreen
   },
   {
-    defaultNavigationOptions: defaultStackNavOptions,
+    // initialRouteName: 'Categories',
+    defaultNavigationOptions: defaultStackNavOptions
   }
 );
 
@@ -56,83 +61,84 @@ const tabScreenConfig = {
   Meals: {
     screen: MealsNavigator,
     navigationOptions: {
-      tabBarIcon: (tabInfo) => {
+      tabBarIcon: tabInfo => {
         return (
           <Ionicons name="ios-restaurant" size={25} color={tabInfo.tintColor} />
         );
       },
       tabBarColor: Colors.primaryColor,
       tabBarLabel:
-        Platform.OS === "android" ? (
-          <Text style={{ fontFamily: "open-sans-bold" }}>Meals</Text>
+        Platform.OS === 'android' ? (
+          <Text style={{ fontFamily: 'open-sans-bold' }}>Meals</Text>
         ) : (
-          "Meals"
-        ),
-    },
+          'Meals'
+        )
+    }
   },
   Favorites: {
     screen: FavNavigator,
     navigationOptions: {
-      tabBarIcon: (tabInfo) => {
+      tabBarIcon: tabInfo => {
         return <Ionicons name="ios-star" size={25} color={tabInfo.tintColor} />;
       },
       tabBarColor: Colors.accentColor,
       tabBarLabel:
-        Platform.OS === "android" ? (
-          <Text style={{ fontFamily: "open-sans-bold" }}>Favorites</Text>
+        Platform.OS === 'android' ? (
+          <Text style={{ fontFamily: 'open-sans-bold' }}>Favorites</Text>
         ) : (
-          "Favorites"
-        ),
-    },
-  },
+          'Favorites'
+        )
+    }
+  }
 };
 
 const MealsFavTabNavigator =
-  Platform.OS === "android"
+  Platform.OS === 'android'
     ? createMaterialBottomTabNavigator(tabScreenConfig, {
-        activeTintColor: "white",
+        activeTintColor: 'white',
         shifting: true,
         barStyle: {
-          backgroundColor: Colors.primaryColor,
-        },
+          backgroundColor: Colors.primaryColor
+        }
       })
     : createBottomTabNavigator(tabScreenConfig, {
         tabBarOptions: {
           labelStyle: {
-            fontFamily: "open-sans",
+            fontFamily: 'open-sans'
           },
-          activeTintColor: Colors.accentColor,
-        },
+          activeTintColor: Colors.accentColor
+        }
       });
 
 const FiltersNavigator = createStackNavigator(
   {
-    Filters: FiltersScreen,
+    Filters: FiltersScreen
   },
   {
     // navigationOptions: {
-
+    //   drawerLabel: 'Filters!!!!'
     // },
-    defaultNavigationOptions: defaultStackNavOptions,
+    defaultNavigationOptions: defaultStackNavOptions
   }
 );
+
 const MainNavigator = createDrawerNavigator(
   {
-    MealsFav: {
+    MealsFavs: {
       screen: MealsFavTabNavigator,
       navigationOptions: {
-        drawerLabel: "Meals",
-      },
+        drawerLabel: 'Meals'
+      }
     },
-    Filters: FiltersNavigator,
+    Filters: FiltersNavigator
   },
   {
     contentOptions: {
       activeTintColor: Colors.accentColor,
       labelStyle: {
-        fontFamily: "open-sans-bold",
-      },
-    },
+        fontFamily: 'open-sans-bold'
+      }
+    }
   }
 );
 

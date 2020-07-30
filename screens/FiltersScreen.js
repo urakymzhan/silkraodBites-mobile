@@ -1,23 +1,27 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, StyleSheet, Switch, Platform } from "react-native";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import HeaderButton from "../components/HeaderButton";
-import Colors from "../constants/Colors";
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, Switch, Platform } from 'react-native';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { useDispatch } from 'react-redux';
 
-const FilterSwitch = (props) => {
+import HeaderButton from '../components/HeaderButton';
+import Colors from '../constants/Colors';
+import { setFilters } from '../store/actions/meals';
+
+const FilterSwitch = props => {
   return (
     <View style={styles.filterContainer}>
       <Text>{props.label}</Text>
       <Switch
         trackColor={{ true: Colors.primaryColor }}
-        thumbColor={Platform.OS === "android" ? Colors.primaryColor : ""}
+        thumbColor={Platform.OS === 'android' ? Colors.primaryColor : ''}
         value={props.state}
         onValueChange={props.onChange}
       />
     </View>
   );
 };
-const FiltersScreen = (props) => {
+
+const FiltersScreen = props => {
   const { navigation } = props;
 
   const [isGlutenFree, setIsGlutenFree] = useState(false);
@@ -25,22 +29,21 @@ const FiltersScreen = (props) => {
   const [isVegan, setIsVegan] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
 
-  //  saveFilters is only re-created if its dependencies changed.
-  // saveFilters is dependency of useEffect
+  const dispatch = useDispatch();
+
   const saveFilters = useCallback(() => {
     const appliedFilters = {
       glutenFree: isGlutenFree,
       lactoseFree: isLactoseFree,
       vegan: isVegan,
-      vegetarian: isVegetarian,
+      vegetarian: isVegetarian
     };
-    console.log("appliedFilters", appliedFilters);
-  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
+
+    dispatch(setFilters(appliedFilters));
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian, dispatch]);
 
   useEffect(() => {
-    navigation.setParams({
-      save: saveFilters,
-    });
+    navigation.setParams({ save: saveFilters });
   }, [saveFilters]);
 
   return (
@@ -49,30 +52,30 @@ const FiltersScreen = (props) => {
       <FilterSwitch
         label="Gluten-free"
         state={isGlutenFree}
-        onChange={(newValue) => setIsGlutenFree(newValue)}
+        onChange={newValue => setIsGlutenFree(newValue)}
       />
       <FilterSwitch
-        label="lactose-free"
+        label="Lactose-free"
         state={isLactoseFree}
-        onChange={(newValue) => setIsLactoseFree(newValue)}
+        onChange={newValue => setIsLactoseFree(newValue)}
       />
       <FilterSwitch
         label="Vegan"
         state={isVegan}
-        onChange={(newValue) => setIsVegan(newValue)}
+        onChange={newValue => setIsVegan(newValue)}
       />
       <FilterSwitch
         label="Vegetarian"
         state={isVegetarian}
-        onChange={(newValue) => setIsVegetarian(newValue)}
+        onChange={newValue => setIsVegetarian(newValue)}
       />
     </View>
   );
 };
 
-FiltersScreen.navigationOptions = (navData) => {
+FiltersScreen.navigationOptions = navData => {
   return {
-    headerTitle: "Filter Meals",
+    headerTitle: 'Filter Meals',
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
@@ -87,33 +90,33 @@ FiltersScreen.navigationOptions = (navData) => {
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
-          title="Menu"
+          title="Save"
           iconName="ios-save"
-          onPress={navData.navigation.getParam("save")}
+          onPress={navData.navigation.getParam('save')}
         />
       </HeaderButtons>
-    ),
+    )
   };
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center'
   },
   title: {
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold',
     fontSize: 22,
     margin: 20,
-    textAlign: "center",
+    textAlign: 'center'
   },
   filterContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "80%",
-    marginVertical: 5,
-  },
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '80%',
+    marginVertical: 15
+  }
 });
 
 export default FiltersScreen;
