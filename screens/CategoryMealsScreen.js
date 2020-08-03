@@ -6,13 +6,13 @@ import { CATEGORIES } from '../data/dummy-data';
 import MealList from '../components/MealList';
 import DefaultText from '../components/DefaultText';
 
-const CategoryMealScreen = props => {
-  const catId = props.navigation.getParam('categoryId');
+const CategoryMealScreen = (props) => {
+  const catId = props.route.params ? props.route.params.categoryId : null;
 
-  const availableMeals = useSelector(state => state.meals.filteredMeals);
+  const availableMeals = useSelector((state) => state.meals.filteredMeals);
 
   const displayedMeals = availableMeals.filter(
-    meal => meal.categoryIds.indexOf(catId) >= 0
+    (meal) => meal.categoryIds.indexOf(catId) >= 0
   );
 
   if (displayedMeals.length === 0) {
@@ -26,13 +26,15 @@ const CategoryMealScreen = props => {
   return <MealList listData={displayedMeals} navigation={props.navigation} />;
 };
 
-CategoryMealScreen.navigationOptions = navigationData => {
-  const catId = navigationData.navigation.getParam('categoryId');
+export const screenOptions = (navData) => {
+  const catObj = navData.route.params ? navData.route.params : {};
 
-  const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
+  const selectedCategory = CATEGORIES.find(
+    (cat) => cat.id === catObj.categoryId
+  );
 
   return {
-    headerTitle: selectedCategory.title
+    headerTitle: selectedCategory.title,
   };
 };
 
@@ -40,8 +42,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default CategoryMealScreen;
